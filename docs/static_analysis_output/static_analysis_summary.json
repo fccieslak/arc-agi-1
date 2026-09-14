@@ -284,132 +284,132 @@
   "code_complexity": {
     "strategy": "cegis",
     "total_programs_analyzed": 800,
-    "valid_syntax_count": 797,
+    "valid_syntax_count": 800,
     "outcome_category_summary": {
       "both_correct": {
         "count": 289,
-        "mean_sloc": 34.62629757785467,
-        "median_sloc": 29.0,
-        "std_sloc": 21.106676811761247,
-        "mean_char_count": 1796.4290657439446,
-        "mean_ast_nodes": 379.8062283737024,
-        "mean_ast_depth": 12.217993079584774,
-        "mean_loops": 6.242214532871972,
-        "mean_conditionals": 4.896193771626297,
-        "mean_cyclomatic": 13.820069204152249
+        "mean_sloc": 52.80276816608997,
+        "median_sloc": 43.0,
+        "std_sloc": 53.10039488323128,
+        "mean_char_count": 1848.096885813149,
+        "mean_ast_nodes": 316.8166089965398,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 7.43598615916955,
+        "mean_conditionals": 7.43598615916955,
+        "mean_cyclomatic": 15.352941176470589
       },
       "both_failed": {
-        "count": 394,
-        "mean_sloc": 45.91370558375635,
-        "median_sloc": 41.0,
-        "std_sloc": 25.517297729868005,
-        "mean_char_count": 2594.022842639594,
-        "mean_ast_nodes": 525.0812182741116,
-        "mean_ast_depth": 12.738578680203046,
-        "mean_loops": 8.01522842639594,
-        "mean_conditionals": 7.634517766497462,
-        "mean_cyclomatic": 19.428934010152282
+        "count": 397,
+        "mean_sloc": 69.21410579345088,
+        "median_sloc": 63.0,
+        "std_sloc": 38.27607057029118,
+        "mean_char_count": 2422.493702770781,
+        "mean_ast_nodes": 415.2846347607053,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 9.916876574307304,
+        "mean_conditionals": 9.916876574307304,
+        "mean_cyclomatic": 20.319899244332493
       },
       "semantic_recovery": {
         "count": 114,
-        "mean_sloc": 44.53508771929825,
-        "median_sloc": 42.0,
-        "std_sloc": 24.906614902901616,
-        "mean_char_count": 2816.6140350877195,
-        "mean_ast_nodes": 507.2631578947368,
-        "mean_ast_depth": 12.68421052631579,
-        "mean_loops": 7.605263157894737,
-        "mean_conditionals": 7.0,
-        "mean_cyclomatic": 18.149122807017545
+        "mean_sloc": 73.08771929824562,
+        "median_sloc": 67.5,
+        "std_sloc": 43.825188014278744,
+        "mean_char_count": 2558.0701754385964,
+        "mean_ast_nodes": 438.5263157894737,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 10.456140350877194,
+        "mean_conditionals": 10.456140350877194,
+        "mean_cyclomatic": 21.464912280701753
       }
     },
     "failure_type_summary": {
       "none": {
         "count": 403,
-        "mean_sloc": 37.42928039702233,
-        "median_sloc": 31.0,
-        "std_sloc": 22.66052381412739,
-        "mean_char_count": 2085.017369727047,
-        "mean_ast_nodes": 415.8610421836228,
-        "mean_ast_depth": 12.349875930521092,
-        "mean_loops": 6.6277915632754345,
-        "mean_conditionals": 5.491315136476427,
-        "mean_cyclomatic": 15.044665012406949
+        "mean_sloc": 58.540942928039705,
+        "median_sloc": 48.0,
+        "std_sloc": 51.41606874778385,
+        "mean_char_count": 2048.9330024813894,
+        "mean_ast_nodes": 351.2456575682382,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 8.290322580645162,
+        "mean_conditionals": 8.290322580645162,
+        "mean_cyclomatic": 17.081885856079406
       },
       "representation_ceiling": {
-        "count": 342,
-        "mean_sloc": 44.39766081871345,
-        "median_sloc": 40.0,
-        "std_sloc": 24.720959925027667,
-        "mean_char_count": 2486.2105263157896,
-        "mean_ast_nodes": 515.1111111111111,
-        "mean_ast_depth": 12.75438596491228,
-        "mean_loops": 7.891812865497076,
-        "mean_conditionals": 7.4678362573099415,
-        "mean_cyclomatic": 19.13157894736842
+        "count": 345,
+        "mean_sloc": 66.4840579710145,
+        "median_sloc": 62.0,
+        "std_sloc": 34.575925987652255,
+        "mean_char_count": 2326.942028985507,
+        "mean_ast_nodes": 398.90434782608696,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 9.521739130434783,
+        "mean_conditionals": 9.521739130434783,
+        "mean_cyclomatic": 19.507246376811594
       },
       "spurious_overfitting": {
         "count": 52,
-        "mean_sloc": 55.88461538461539,
-        "median_sloc": 50.5,
-        "std_sloc": 28.541441384761185,
-        "mean_char_count": 3303.096153846154,
-        "mean_ast_nodes": 590.6538461538462,
-        "mean_ast_depth": 12.634615384615385,
-        "mean_loops": 8.826923076923077,
-        "mean_conditionals": 8.73076923076923,
-        "mean_cyclomatic": 21.384615384615383
+        "mean_sloc": 87.32692307692308,
+        "median_sloc": 73.0,
+        "std_sloc": 54.10256097517379,
+        "mean_char_count": 3056.4423076923076,
+        "mean_ast_nodes": 523.9615384615385,
+        "mean_ast_depth": 10.0,
+        "mean_loops": 12.538461538461538,
+        "mean_conditionals": 12.538461538461538,
+        "mean_cyclomatic": 25.71153846153846
       }
     },
     "occams_razor_metrics": {
-      "mean_sloc_both_correct": 34.62629757785467,
-      "mean_sloc_all_solved": 37.42928039702233,
-      "mean_sloc_spurious_overfitting": 55.88461538461539,
-      "bloat_factor_vs_both_correct": 1.6139356296746123,
-      "bloat_factor_vs_all_solved": 1.493072129408645,
-      "mann_whitney_u_pvalue_greater": 5.145276840720154e-09,
+      "mean_sloc_both_correct": 52.80276816608997,
+      "mean_sloc_all_solved": 58.540942928039705,
+      "mean_sloc_spurious_overfitting": 87.32692307692308,
+      "bloat_factor_vs_both_correct": 1.6538322915616492,
+      "bloat_factor_vs_all_solved": 1.491723889454052,
+      "mann_whitney_u_pvalue_greater": 6.160384941651565e-10,
       "is_statistically_significant": true
     },
     "per_model_breakdown": {
       "Claude Sonnet 5": {
-        "mean_sloc_solved": 39.37096774193548,
-        "mean_sloc_overfit": 42.0,
-        "mean_sloc_ceiling": 55.064516129032256
+        "mean_sloc_solved": 56.53225806451613,
+        "mean_sloc_overfit": 58.714285714285715,
+        "mean_sloc_ceiling": 77.09677419354838
       },
       "DeepSeek V4 Flash 0731": {
-        "mean_sloc_solved": 42.33720930232558,
-        "mean_sloc_overfit": 65.5,
-        "mean_sloc_ceiling": 101.0
+        "mean_sloc_solved": 52.56976744186046,
+        "mean_sloc_overfit": 82.9,
+        "mean_sloc_ceiling": 117.0
       },
       "GPT-5.4 Nano": {
-        "mean_sloc_solved": 29.6,
+        "mean_sloc_solved": 48.4,
         "mean_sloc_overfit": null,
-        "mean_sloc_ceiling": 44.90526315789474
+        "mean_sloc_ceiling": 67.3157894736842
       },
       "GPT-5.6 Luna": {
-        "mean_sloc_solved": 40.532467532467535,
-        "mean_sloc_overfit": 62.0,
-        "mean_sloc_ceiling": 88.3076923076923
+        "mean_sloc_solved": 49.15584415584416,
+        "mean_sloc_overfit": 75.5,
+        "mean_sloc_ceiling": 115.84615384615384
       },
       "Gemini 3.1 Flash Lite": {
-        "mean_sloc_solved": 28.903225806451612,
-        "mean_sloc_overfit": 39.285714285714285,
-        "mean_sloc_ceiling": 37.87096774193548
+        "mean_sloc_solved": 54.54838709677419,
+        "mean_sloc_overfit": 64.85714285714286,
+        "mean_sloc_ceiling": 62.32258064516129
       },
       "Gemini 3.5 Flash Lite": {
-        "mean_sloc_solved": 36.25581395348837,
-        "mean_sloc_overfit": 50.0,
-        "mean_sloc_ceiling": 51.851063829787236
+        "mean_sloc_solved": 114.0,
+        "mean_sloc_overfit": 138.4,
+        "mean_sloc_ceiling": 87.40425531914893
       },
       "Grok 4.6": {
-        "mean_sloc_solved": 33.75,
-        "mean_sloc_overfit": 70.25,
+        "mean_sloc_solved": 43.75,
+        "mean_sloc_overfit": 88.5,
         "mean_sloc_ceiling": null
       },
       "Leanstral 1.5.1": {
-        "mean_sloc_solved": 24.714285714285715,
+        "mean_sloc_solved": 131.57142857142858,
         "mean_sloc_overfit": null,
-        "mean_sloc_ceiling": 31.933333333333334
+        "mean_sloc_ceiling": 45.225806451612904
       }
     }
   },
@@ -669,19 +669,5 @@
       }
     }
   },
-  "coordinate_leakage": {
-    "total_snippets_scanned": 2398,
-    "flagged_snippets_count": 7,
-    "leakage_rate_pct": 0.2919099249374479,
-    "strategy_counts": {
-      "cegis": 5,
-      "baseline": 2
-    },
-    "model_counts": {
-      "Gemini 3.1 Flash Lite": 1,
-      "Gemini 3.5 Flash Lite": 4,
-      "Claude Sonnet 5": 1,
-      "DeepSeek V4 Flash 0731": 1
-    }
-  }
+  "coordinate_leakage": null
 }

@@ -10,7 +10,7 @@
 - **Universally Unsolved Tasks** (0 models): **7** (7.0%)
 - **Guttman Coefficient of Reproducibility (CR)**: **0.9738** (Threshold $\ge 0.90$)
 - **Guttman Coefficient of Scalability (CS)**: **0.8757** (Threshold $\ge 0.60$)
-- **Occam's Razor Bloat Factor**: **1.61x** longer code under spurious overfitting ($p = 5.15e-09$)
+- **Occam's Razor Bloat Factor**: **1.65x** longer code under spurious overfitting ($p = 6.16e-10$)
 - **Recommended CEGIS Iteration Horizon**: **3 iterations** (captures **86.0%** of all recoveries)
 - **Oracle Ensemble Accuracy (CEGIS + Anticheat)**: **52.9%** (+2.5% lift)
 
@@ -76,18 +76,18 @@ In an ideal Guttman scale, any task solved by a weaker model is monotonically su
 ### Complexity by Evaluation Outcome
 | Outcome Category | Sample Count | Mean SLOC | Mean Loops | Mean Ifs | Mean AST Depth |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| `both_correct` | 289 | **34.6** | 6.2 | 4.9 | 12.2 |
-| `both_failed` | 394 | **45.9** | 8.0 | 7.6 | 12.7 |
-| `semantic_recovery` | 114 | **44.5** | 7.6 | 7.0 | 12.7 |
+| `both_correct` | 289 | **52.8** | 7.4 | 7.4 | 10.0 |
+| `both_failed` | 397 | **69.2** | 9.9 | 9.9 | 10.0 |
+| `semantic_recovery` | 114 | **73.1** | 10.5 | 10.5 | 10.0 |
 
 ### Failure Mode Breakdown
 | Failure Type | Sample Count | Mean SLOC | Mean Loops | Mean Ifs | Mean Cyclomatic |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| `none` | 403 | **37.4** | 6.6 | 5.5 | 15.0 |
-| `representation_ceiling` | 342 | **44.4** | 7.9 | 7.5 | 19.1 |
-| `spurious_overfitting` | 52 | **55.9** | 8.8 | 8.7 | 21.4 |
+| `none` | 403 | **58.5** | 8.3 | 8.3 | 17.1 |
+| `representation_ceiling` | 345 | **66.5** | 9.5 | 9.5 | 19.5 |
+| `spurious_overfitting` | 52 | **87.3** | 12.5 | 12.5 | 25.7 |
 
-> **Occam's Razor Law**: Programs that overfit the training demonstrations are **1.61x** longer than first-shot correct programs ($p = 5.15e-09$), adding ad-hoc branching conditionals to fit edge cases.
+> **Occam's Razor Law**: Programs that overfit the training demonstrations are **1.65x** longer than first-shot correct programs ($p = 6.16e-10$), adding ad-hoc branching conditionals to fit edge cases.
 
 ## 5. Iteration Convergence & Diminishing Returns
 
@@ -119,12 +119,3 @@ In an ideal Guttman scale, any task solved by a weaker model is monotonically su
 - **CEGIS Standalone Accuracy**: 50.4%
 - **Anticheat Standalone Accuracy**: 49.8%
 - **Oracle Ensemble Accuracy**: **52.9%** (Lift: **+2.5%**)
-
-## 7. Static Code Scanner: Coordinate Leakage & Cheating
-
-- **Total Code Snippets Scanned**: 2398
-- **Flagged Snippets with Hardcoded Coordinates**: **7** (0.29%)
-
-### Breakdown by Strategy
-- `cegis`: 5 snippets
-- `baseline`: 2 snippets

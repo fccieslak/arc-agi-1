@@ -214,12 +214,14 @@ def plot_strategy_discrepancy(discrepancy_results: dict[str, Any], output_path: 
     ct = discrepancy_results["contingency_table"]
     s1_name = discrepancy_results["strategy_1"]
     s2_name = discrepancy_results["strategy_2"]
+    s1_display = "CEGIS" if s1_name.lower() == "cegis" else s1_name
+    s2_display = "Anti-Trapaça" if s2_name.lower() in ["anticheat", "anti_cheat", "anti-trapaça"] else s2_name
 
     labels = [
-        f"Ambos\nAcertaram\n({ct['both_succeeded']})",
-        f"Apenas\n{s1_name}\n({ct[f'{s1_name}_only_succeeded']})",
-        f"Apenas\n{s2_name}\n({ct[f'{s2_name}_only_succeeded']})",
-        f"Ambos\nFalharam\n({ct['both_failed']})",
+        f"Ambos Acertaram\n({ct['both_succeeded']})",
+        f"Apenas {s1_display}\n({ct[f'{s1_name}_only_succeeded']})",
+        f"Apenas {s2_display}\n({ct[f'{s2_name}_only_succeeded']})",
+        f"Ambos Falharam\n({ct['both_failed']})",
     ]
     vals = [
         ct["both_succeeded"],
@@ -229,16 +231,18 @@ def plot_strategy_discrepancy(discrepancy_results: dict[str, Any], output_path: 
     ]
     colors = ["#2ca02c", "#1f77b4", "#ff7f0e", "#d62728"]
 
-    fig, ax = plt.subplots(figsize=(8, 4.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(7.2, 4.4), dpi=300)
     bars = ax.bar(labels, vals, color=colors, edgecolor="black", width=0.55, alpha=0.85)
 
     tot = discrepancy_results["total_evaluations"]
     for bar in bars:
         h = bar.get_height()
         pct = (h / tot) * 100
-        ax.annotate(f"{pct:.1f}%", (bar.get_x() + bar.get_width() / 2, h), xytext=(0, 3), textcoords="offset points", ha="center", va="bottom", fontsize=9, fontweight="bold")
+        ax.annotate(f"{pct:.1f}%", (bar.get_x() + bar.get_width() / 2, h), xytext=(0, 3), textcoords="offset points", ha="center", va="bottom", fontsize=10.5, fontweight="bold")
 
     ax.set_ylabel("Quantidade de Avaliações", fontsize=11, fontweight="bold")
+    ax.tick_params(axis="x", labelsize=10.5)
+    ax.tick_params(axis="y", labelsize=10)
     ax.set_ylim(0, max(vals) * 1.15)
     ax.grid(axis="y", linestyle="--", alpha=0.5)
 

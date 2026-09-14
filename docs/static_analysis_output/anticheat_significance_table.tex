@@ -2,12 +2,12 @@
 \begin{table*}[t]
   \centering
   \small
-  \caption{Paired Statistical Significance Tests for AntiCheat vs. Standard CEGIS (Exact Binomial, Permutation, and Bootstrap $B=10{,}000$, $\alpha=0.05$).}
+  \caption{Testes de \significancia{} pareada para \AntiTrapaca{} vs.\ CEGIS (Binomial Exato, \Permutacao{} e Bootstrap $B=10{,}000$, $\alpha=0{,}05$). Coluna $b / c$: pares discordantes ($b$: exclusivas do CEGIS; $c$: exclusivas do \AntiTrapaca{}).}
   \label{tab:anticheat_significance}
   \setlength{\tabcolsep}{4.5pt}
   \begin{tabular}{lcccccccc}
     \toprule
-    Modelo & CEGIS & AntiCheat & $\Delta$ & $b / c$ & $p_{\text{exact}}$ & $p_{\text{perm}}$ & IC 95\% Bootstrap & $p_{\text{bonf}}$ \\
+    Modelo & CEGIS & \AntiTrapaca{} & $\Delta$ & $b / c$ & $p_{\text{exact}}$ & $p_{\text{perm}}$ & IC 95\% Bootstrap & $p_{\text{bonf}}$ \\
     \midrule
     \texttt{Claude Sonnet 5} & 62.0\% & 60.0\% & -2.0\% & 5 / 3 & 0.7266 & 0.7236 & [-8.0\%, +3.0\%] & 1.0000 \\
     \texttt{DeepSeek V4 Flash 0731} & 86.0\% & 86.0\% & +0.0\% & 0 / 0 & 1.0000 & 1.0000 & [+0.0\%, +0.0\%] & 1.0000 \\
@@ -18,7 +18,7 @@
     \texttt{Grok 4.6} & 92.0\% & 92.0\% & +0.0\% & 0 / 0 & 1.0000 & 1.0000 & [+0.0\%, +0.0\%] & 1.0000 \\
     \texttt{Leanstral 1.5.1} & 7.0\% & 9.0\% & +2.0\% & 2 / 4 & 0.6875 & 0.6861 & [-2.0\%, +7.0\%] & 1.0000 \\
     \midrule
-    \textbf{POOLED TOTAL} & 50.4\% & 49.8\% & -0.6\% & 25 / 20 & 0.5515 & 0.5501 & [-2.2\%, +1.0\%] & — \\
+    \textbf{TOTAL AGREGADO} & 50.4\% & 49.8\% & -0.6\% & 25 / 20 & 0.5515 & 0.5501 & [-2.2\%, +1.0\%] & — \\
     \bottomrule
   \end{tabular}
 \end{table*}

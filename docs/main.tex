@@ -10,21 +10,21 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage[hyphens]{url}
-\usepackage[ruled,vlined,linesnumbered,portuguese]{algorithm2e}
-\usepackage{microtype}
-
+\usepackage[brazil]{babel}
 \pdfinfo{
 /TemplateVersion (2027.1)
 }
 
-% Optional: Set counter for section numbers if needed (0 means no numbers, 1 means section numbers, 2 means sections and subsections)
+% Set counter for section numbers (0 means no numbers, 1 means section numbers, 2 means sections and subsections)
 \setcounter{secnumdepth}{2}
 
 \input{diacritics.tex}
 
-\title{\textbf{S\'{\i}ntese de Programas com CEGIS e Restri\c{c}\~{o}es Anti-Overfitting no ARC-AGI: Uma \Analise Estrutural e Estat\'{\i}stica}}
+\renewcommand{\tablename}{Tabela}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\refname}{Refer{\^e}ncias}
+
+\title{\Analise{} do Impacto de \Variacoes{} de Prompting e Feedback \Semantico{} no ARC-AGI-1: \Fundamentacao{} \Estatistica{}}
 
 \author{
     Fabio Luiz da Costa Cieslak\equalcontrib\textsuperscript{1},
@@ -39,28 +39,143 @@
 
 \maketitle
 
-% Seção 0: Resumo
-\input{sections/0_resumo}
+\begin{abstract}
+O benchmark \textit{Abstraction and Reasoning Corpus} (ARC-AGI-1) avalia o \raciocinio{} indutivo e a \generalizacao{} em sistemas de \inteligencia{} artificial por meio da \transformacao{} de grades matriciais coloridas a partir de \demonstracoes{} visuais. Neste trabalho investiga-se a \sintese{} indutiva de programas guiada por contraexemplos (CEGIS) e o efeito de \restricoes{} textuais \AntiTrapaca{} sobre oito modelos de linguagem em 100 tarefas do benchmark. A variante \AntiTrapaca{}, que restringe desvios condicionais ad-hoc e demanda a \declaracao{} \previa{} do invariante abstrato, revelou-se estatisticamente equivalente ao CEGIS \padrao{} ($50{,}4\%$ vs.\ $49{,}8\%$, $p = 0{,}5515$), refutando a \hipotese{} de que diretivas de prompt anti-hardcoding oferecem vantagem \generalizavel{}. A \analise{} dos modos de falha revelou que, embora o teto de busca responda por $86{,}9\%$ dos erros no agregado, o sobreajuste \espurio{} \e{} a barreira dominante na fronteira ($100\%$ no \texttt{Grok 4.6} e $71{,}4\%$ no \texttt{DeepSeek V4}).
+\end{abstract}
 
-% Seção 1: Introdução
-\input{sections/1_introducao}
+\section{\Introducao{}}
+O \textit{Abstraction and Reasoning Corpus} (ARC-AGI) \cite{chollet2019measure} foi proposto para mensurar a \inteligencia{} geral por meio da \inducao{}, contrastando com a \memorizacao{} em bases massivas \caracteristica{} dos Grandes Modelos de Linguagem (LLMs). Cada tarefa \e{} composta por matrizes bidimensionais discretas com valores inteiros de 0 a 9 (representando dez cores distintas), acompanhadas de 2 a 5 pares de treino (entrada e \saida{} esperada) e uma grade de teste oculta, cuja \transformacao{} deve ser inferida com \exatidao{}.
 
-% Seção 2: Trabalhos Relacionados
-\input{sections/2_trabalhos_relacionados}
+Neste trabalho, explora-se a \sintese{} indutiva de programas guiada por contraexemplos (CEGIS, \textit{Counterexample-Guided Inductive Synthesis}) \cite{solar2008program} para resolver tarefas ARC-AGI usando LLMs. A \inducao{} de programas a partir de demonstra{\c{c}}{\~o}es matriciais alinha-se a marcos do dom{\'{i}}nio, como o aprendizado de invariantes e linguagens conceituais no DreamCoder \cite{ellis2021dreamcoder} e a comunica{\c{c}}{\~a}o de programas naturais no corpus LARC \cite{larc2022acquaviva}. Em contraste com \metodos{} dedutivos cl{\'{a}}ssicos baseados em provadores \logicos{} e \especificacoes{} completas, o CEGIS sintetiza \funcoes{} em Python sob supervis{\~a}o de exemplos \empiricos{}. O LLM atua como sintetizador \probabilistico{}, enquanto o interpretador atua como verificador \deterministico{}. Essa din{\^{a}}mica conecta-se aos paradigmas de auto-reparo e \reflexao{} verbal em LLMs, como \textit{Self-Refine} \cite{madaan2023self} e \textit{Reflexion} \cite{shinn2023reflexion}, nos quais a cadeia de \raciocinio{} \cite{wei2022chain} \e{} direcionada pela \evidencia{} do erro.
 
-% Seção 3: Abordagem Proposta
-\input{sections/3_abordagem_proposta}
+Devido \a{} estrutura do CEGIS, \e{} \possivel{} que ocorram \solucoes{} parciais para as tarefas, nas quais o modelo adiciona condicionais ou dados \especificos{} das tarefas de treino (hardcoded) que \nao{} generalizam para as tarefas de teste. Para investigar esse \fenomeno{}, \propoe{}-se um teste entre dois prompts de contraexemplo: um com diretivas denominadas \AntiTrapaca{} e outro sem. O objetivo dessas regras \e{} coibir \memorizacoes{} parciais por meio do veto a regras ad-hoc e da \exigencia{} de \verbalizacao{} do invariante subjacente. A \hipotese{} central deste trabalho \e{} que \textit{\restricoes{} \semanticas{} anti-hardcoding e a \reflexao{} \explicita{} sobre invariantes melhoram a taxa de acerto no teste oculto do ARC-AGI}. Para isso, estabelece-se um protocolo experimental pareado no benchmark, avaliando formalmente oito modelos de linguagem em uma amostra controlada de 100 tarefas.
 
-% Seção 4: Metodologia Experimental (deixada em branco para preenchimento posterior)
-\input{sections/4_metodologia_experimental}
+\section{\Sintese{} de Programas e \Variacoes{} de Prompting}
+\label{sec:metodo}
 
-% Seção 5: Resultados
-\input{sections/5_resultados}
+\subsection{Ciclo Conversacional do CEGIS \Semantico{}}
+Diferentemente de avalia{\c{c}}{\~o}es baseadas em amostragem paralela (\textit{pass@k} com m{\'{u}}ltiplas gera{\c{c}}{\~o}es independentes), neste trabalho o \textit{pass@1} designa estritamente o Turno 0 de uma sess{\~a}o conversacional interativa \textit{stateful} com or{\c{c}}amento de reparos $K_{\max} = 5$. No Turno 0, o modelo recebe as \demonstracoes{} de treino e sintetiza a \funcao{} candidata \texttt{transform(grid)}. Para isolar o \codigo{} \executavel{} do texto explicativo, o sistema utiliza \expressoes{} regulares para extrair exclusivamente o bloco delimitado por \texttt{\`{}\`{}\`{}python ... \`{}\`{}\`{}}, prevenindo falhas de \interpretacao{} decorrentes de prosa adicional.
 
-% Seção 6: Discussão e Conclusões
-\input{sections/6_discussao_conclusoes}
+A din{\^{a}}mica iterativa obedece a tr{\^{e}}s pol{\'{i}}ticas formais: (i)~\textbf{Parada Estrita (\textit{Hard Stopping}):} em cada turno $k \in \{0, \dots, K_{\max}-1\}$, a fun{\c{c}}{\~a}o candidata \e{} executada sequencialmente sobre os pares de treino. Obtendo 100\% de conformidade no treino, o ciclo de busca \e{} encerrado imediatamente e o c{\'{o}}digo \e{} submetido {\`{a}} grade de teste oculta. Logo, solu{\c{c}}{\~o}es que acertam o treino no Turno 0 (\textit{pass@1}) s{\~a}o preservadas sem altera{\c{c}}{\~o}es, impossibilitando regress{\~a}o no treino; (ii)~\textbf{Interrup{\c{c}}{\~a}o no Primeiro Contraexemplo:} havendo erro de sintaxe, \textit{timeout} de $2{,}0\text{s}$ ou diverg{\^{e}}ncia matricial, a execu{\c{c}}{\~a}o interrompe no primeiro exemplo discordante, gerando feedback corretivo; e (iii)~\textbf{Esgotamento de Or{\c{c}}amento:} atingindo $K_{\max} = 5$ itera{\c{c}}{\~o}es sem converg{\^{e}}ncia no treino, a sess{\~a}o encerra-se como falha e o teste cego n{\~a}o \e{} consultado.
 
-% Seção 7: Referências Bibliográficas
+\subsection{Diretivas \AntiTrapaca{} e \Elicitacao{} de Invariantes}
+Modelos submetidos a feedback de contraexemplos podem cair em sobreajuste (\textit{overfitting}), inserindo \clausulas{} condicionais dedicadas unicamente a satisfazer o exemplo discordante rec{\'{e}}m-apresentado. A \estrategia{} \AntiTrapaca{} estabelece \instrucoes{} negativas expressas contra \ramificacoes{} ad-hoc e exige que o modelo explicite o conceito invariante antes de redigir o \codigo{}.
+
+Ressalta-se que a \restricao{} \a{} coordenadas fixas e a \exigencia{} do invariante foram aplicadas exclusivamente via engenharia de prompt conversacional, sem filtragem ou \rejeicao{} \programatica{} em tempo de \execucao{} no sandbox. Como ferramenta auditora \textit{post-hoc}, utilizou-se uma varredura baseada em \expressoes{} regulares sobre as 2.398 \funcoes{} geradas, inspecionando \padroes{} de coordenadas e matrizes literais.
+
+\subsection{\Especificacao{} Estruturada dos Prompts}
+Para assegurar a estrita replicabilidade do estudo, o protocolo estabeleceu o texto literal dos blocos de \instrucao{}:
+
+\noindent\textbf{1. Prompt de Sistema:} \textit{"You are an expert AI solving ARC-AGI puzzles by writing Python code."}
+
+\noindent\textbf{2. Prompt Inicial de Passada \Unica{} (pass@1):}
+Apresenta os pares de treino serializados em JSON (\texttt{Example 0}, etc.), requisita a \funcao{} \texttt{transform(grid)} e estipula o bloco \texttt{ANTI\_IMPORT}:
+\begin{quote}\footnotesize\ttfamily\raggedright\setlength{\topsep}{1.5pt}\setlength{\partopsep}{0pt}
+CODE RULES:\\
+- DO NOT use any `import` statements (e.g., collections, numpy, math, etc.).\\
+- USE ONLY pure native Python types and functions (list, dict, set, tuple, range, len, min, max, sum, enumerate, zip, abs).
+\end{quote}
+
+\noindent\textbf{3. Feedback de Contraexemplo (CEGIS):}
+As grades 2D s{\~a}o serializadas em matrizes JSON (\texttt{json.dumps()}, e.g., \texttt{[[0,1],[2,3]]}). Sob falha no treino $i$, o sistema emite o feedback literal:
+\begin{quote}\footnotesize\ttfamily\raggedright\setlength{\topsep}{1.5pt}\setlength{\partopsep}{0pt}
+Your code failed on Training Example \{i\}.\\
+- Input: <json\_input\_grid>\\
+- Expected Output: <json\_expected\_grid>\\
+- Produced Output:\\
+  <json\_produced\_grid | Execution Error: ...>\\ \relax
+[CODE RULES ...]\\
+Analyze the discrepancy, fix your logic, and provide the updated `transform(grid)` function inside a ```python ... ``` block.
+\end{quote}
+
+\noindent\textbf{4. Diretivas Adicionais (\AntiTrapaca{}):}
+Anexa textualmente ao feedback de contraexemplo o bloco literal \texttt{ANTI\_CHEAT}:
+\begin{quote}\footnotesize\ttfamily\raggedright\setlength{\topsep}{1.5pt}\setlength{\partopsep}{0pt}
+- DO NOT add conditional branches (if/else) targeting specific example indices, hardcoded coordinates, or specific row values of a single training case. The transformation must be a single, uniform mathematical/geometric rule that applies to ALL grids identically.\\
+- Before writing the code, explicitly state the single abstract invariant that explains why the previous code failed on Example X and how the new logic naturally handles Examples 0, 1, and 2 without special cases.
+\end{quote}
+
+\section{Metodologia e \Fundamentacao{} \Estatistica{}}
+\label{sec:estatistica}
+\subsection{\Analise{} Pareada, Permuta{\c{c}}{\~a}o e Bootstrap}
+Para comparar o desempenho das estratégias mantendo a estrutura pareada, utilizamos um teste de permutação com 100.000 réplicas. O teste exato de McNemar foi aplicado aos pares discordantes, e a reamostragem bootstrap pareada (10.000 réplicas) determinou os intervalos de confiança de 95\%. O controle da taxa de erro familiar para os 8 modelos avaliados foi feito com a correção de Bonferroni ($\alpha = 0,00625$).
+
+\subsection{\Classificacao{} dos Modos de Falha}
+As falhas na \sintese{} \sao{} categorizados em:
+(i)~\textbf{Sobreajuste \Espurio{} (Falsa \Convergencia{}):} o \codigo{} \obtem{} sucesso em $100\%$ das \demonstracoes{} de treino, \porem{} falha na grade de teste cego devido \a{} \absorcao{} de regras acidentais; e
+(ii)~\textbf{Teto de Busca e \Representacao{}:} o processo \nao{} converge no conjunto de treino dentro das $K_{\max} = 5$ \iteracoes{} concedidas.
+
+\input{summary_table.tex}
+\input{significance_table.tex}
+
+\section{Protocolo Experimental e \Execucao{}}
+\label{sec:experimento}
+
+\subsection{Sandbox e \Seguranca{} de \Execucao{}}
+O \codigo{} sintetizado \e{} executado em subprocesso isolado via \texttt{multiprocessing} com \inicializacao{} estrita em contexto \textit{spawn} e limite de tempo de $2{,}0\text{s}$. Interceptores nativos do interpretador (\texttt{sys.addaudithook}) bloqueiam chamadas de disco (\texttt{open}), conectores de rede (\texttt{socket}), \criacao{} de processos (\texttt{subprocess}) e \importacoes{} (\texttt{import}). A \execucao{} \e{} restrita a uma lista de tipos e \funcoes{} (\texttt{\_SAFE\_BUILTINS}). O \criterio{} de \validacao{} \e{} exato e estrito: as matrizes de \saida{} geradas devem coincidir com a \referencia{} em \dimensao{} e \coloracao{}.
+
+\subsection{Modelos, Amostragem e \Parametros{} de \Inferencia{}}
+Avaliou-se um painel com oito modelos: de fronteira (\texttt{Grok 4.6}, \texttt{DeepSeek V4 Flash 0731} e \texttt{GPT-5.6 Luna}), intermedi{\'{a}}rios (\texttt{Claude Sonnet 5}, \texttt{Gemini 3.5 Flash Lite} e \texttt{Gemini 3.1 Flash Lite}) e compactos (\texttt{Leanstral 1.5.1} e \texttt{GPT-5.4 Nano}). A amostragem compreendeu 100 tarefas de treino do ARC-AGI-1 selecionadas pela ordena{\c{c}}{\~a}o lexicogr{\'{a}}fica dos identificadores hexadecimais (\texttt{00576224} a \texttt{3aa6fb7a}) gerados na cria{\c{c}}{\~a}o do corpus \cite{chollet2019measure}. A infer{\^{e}}ncia empregou temperatura $T = 0{,}2$, \texttt{top\_p} $= 1{,}0$, limite m{\'{a}}ximo de 4.096 tokens de gera{\c{c}}{\~a}o e sementes determin{\'{i}}sticas nos provedores suportados.
+
+\section{Resultados Experimentais e \Analise{}}
+\label{sec:resultados}
+
+O protocolo produziu 800 \execucoes{} pareadas (100 tarefas $\times$ 8 modelos). A Tabela~\ref{tab:combined_results} sintetiza a \acuracia{} global e o custo operacional por modelo, enquanto que a Tabela~\ref{tab:significance_tests} detalha os testes inferenciais e os modos de falha.
+
+\subsection{\Eficacia{} do CEGIS sobre a Passada \Unica{}}
+\label{sec:cegis_eficacia}
+A Tabela~\ref{tab:significance_tests} confirma que o CEGIS supera significativamente o baseline de passada \unica{} (\textit{pass@1}) em todos os oito modelos avaliados ($+14{,}3$~pp no agregado, $p_{\text{boot}} < 0{,}05$, com intervalos bootstrap estritamente positivos). Sob a pol{\'{i}}tica de parada estrita, solu{\c{c}}{\~o}es bem-sucedidas no treino no Turno 0 s{\~a}o preservadas sem altera{\c{c}}{\~a}o, recuperando 114 tarefas previamente n{\~a}o resolvidas e validando a efic{\'{a}}cia emp{\'{i}}rica do refinamento iterativo.
+
+\subsection{\Decomposicao{} dos Modos de Falha}
+\label{sec:modos_falha}
+A classifica{\c{c}}{\~a}o das 397 falhas revela que, embora o teto de busca e representa{\c{c}}{\~a}o responda por $86{,}9\%$ dos erros no agregado (345 casos), o sobreajuste esp{\'{u}}rio constitui a barreira prim{\'{a}}ria nos modelos de fronteira, respondendo por $100\%$ das falhas no \texttt{Grok 4.6} (8 erros) e $71{,}4\%$ no \texttt{DeepSeek V4} (10 erros). Em contrapartida, redes compactas falham exclusivamente pela n{\~a}o converg{\^{e}}ncia no treino (95 erros no \texttt{GPT-5.4 Nano} e 93 no \texttt{Leanstral 1.5.1}).
+
+A auditoria estrutural do c{\'{o}}digo revelou ainda uma disparidade sistem{\'{a}}tica no comprimento dos programas segundo o desfecho: fun{\c{c}}{\~o}es associadas a sobreajuste esp{\'{u}}rio apresentaram em m{\'{e}}dia $55{,}9$ linhas de c{\'{o}}digo (SLOC), contra $34{,}6$ linhas nas solu{\c{c}}{\~o}es corretas de primeira tentativa. Esse aumento reflete o ac{\'{u}}mulo de remendos heur{\'{i}}sticos e ramifica{\c{c}}{\~o}es condicionais adicionais ao longo das itera{\c{c}}{\~o}es.
+
+\subsection{CEGIS vs.\ \AntiTrapaca{}: Teste da \Hipotese{} Central}
+\label{sec:anticheat_teste}
+A Tabela~\ref{tab:anticheat_significance} confronta diretamente o CEGIS \padrao{} com a variante \AntiTrapaca{}. No agregado, a \acuracia{} foi de $50{,}4\%$ contra $49{,}8\%$ (\diferenca{} de $-0{,}6$~pp). A matriz de \contingencia{} pareada contabilizou 45 casos discordantes: $b = 25$ tarefas resolvidas exclusivamente pelo CEGIS e $c = 20$ resolvidas com exclusividade pelo \AntiTrapaca{}. O teste binomial exato de McNemar resultou em $p = 0{,}5515$, enquanto que o intervalo bootstrap \contem{} o zero ($IC_{95\%} [-2{,}25\%, +1{,}00\%]$). 
+
+\Apos{} o controle de Bonferroni para \multiplas{} \comparacoes{} ($\alpha/8 = 0{,}00625$), nenhum modelo isolado atingiu \significancia{} (o menor valor, registrado no \texttt{Gemini 3.1 Flash Lite} com $p_{\text{exact}} = 0{,}0156$, ajusta-se para $p_{\text{bonf}} = 0{,}1250$). Portanto, refuta-se a \hipotese{} de que \instrucoes{} textuais anti-hardcoding \oferecam{} vantagem \generalizavel{}. A Figura~\ref{fig:strategy_discrepancy} resume essa \equivalencia{} estrutural.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\columnwidth]{static_analysis_output/plot_strategy_discrepancy.png}
+  \caption{Distribui{\c{c}}{\~a}o das \execucoes pareados entre CEGIS e \AntiTrapaca{} evidenciando a paridade de desempenho entre os modelos.}
+  \label{fig:strategy_discrepancy}
+\end{figure}
+
+\input{static_analysis_output/anticheat_significance_table.tex}
+
+\section{\Discussao{}}
+\label{sec:discussao}
+A \avaliacao{} experimental conduz a tr{\^e}s \implicacoes{} \teoricas{} e \empiricas{}:
+
+\noindent\textbf{1. Paridade do \AntiTrapaca{} e Aus{\^e}ncia de Patologia no Baseline:}
+A equival{\^{e}}ncia estat{\'{i}}stica observada entre o CEGIS padr{\~a}o e a variante \AntiTrapaca{} decorre de um diagn{\'o}stico emp{\'{i}}rico revelador: os modelos raramente fraudam as demonstra{\c{c}}{\~o}es de treino por meio de coordenadas cartesianas fixas. A auditoria realizada por express{\~o}es regulares sobre as 2.398 fun{\c{c}}{\~o}es geradas identificou apenas 7 ocorr{\^{e}}ncias ($0{,}29\%$) de coordenadas ad-hoc. Contudo, essa taxa afere estritamente a indexa{\c{c}}{\~a}o literal de coordenadas (e.g., \texttt{if r == 3 and c == 5}). Contrastando esse baixo percentual com o incha{\c{c}}o estrutural identificado na Se{\c{c}}{\~a}o~\ref{sec:resultados} ($55{,}9$ vs.\ $34{,}6$ SLOC), constata-se que os modelos sobreajustam por meio de remendos heur{\'{i}}sticos distribu{\'{i}}dos, la{\c{c}}os e condicionais fragmentadas que acomodam os pares de treino sem capturar o invariante global, e n{\~a}o por checagens pontuais de coordenadas. Assim, a restri{\c{c}}{\~a}o a coordenadas literais atacou uma patologia marginal, deixando o sobreajuste heur{\'{i}}stico desregulado. Al{\'{e}}m disso, sem barreiras sint{\'{a}}ticas formais no sandbox, diretivas puramente textuais permanecem vulner{\'{a}}veis {\`{a}} neglig{\^e}ncia instrucional sob racioc{\'{i}}nio complexo.
+
+\noindent\textbf{2. Esgotamento do Or{\c{c}}amento de Busca vs.\ Teto de Representa{\c{c}}{\~a}o:}
+Embora o teto de busca e representa{\c{c}}{\~a}o responda por $86{,}9\%$ dos erros no agregado, o sobreajuste esp{\'{u}}rio constitui o obst{\'{a}}culo preponderante na fronteira ($100\%$ no \texttt{Grok 4.6} e $71{,}4\%$ no \texttt{DeepSeek V4}). Para os modelos limitados pelo teto de busca, a n{\~a}o converg{\^{e}}ncia no treino n{\~a}o reflete necessariamente incapacidade representacional inerente. O protocolo operou sob amostragem quase determin{\'{i}}stica ($T=0{,}2$), busca estritamente linear (sem retrocesso) e or{\c{c}}amento restrito de $K_{\max}=5$ turnos, aprisionando o sintetizador em m{\'{i}}nimos locais ap{\'{o}}s o primeiro contraexemplo. Essa limita{\c{c}}{\~a}o aponta que as falhas podem ser causadas pela estrat{\'{e}}gia de explora{\c{c}}{\~a}o e or{\c{c}}amento de busca, super{\'{a}}veis por busca em {\'{a}}rvore (\textit{Tree Search}) ou amostragem paralela, e n{\~a}o unicamente da capacidade intr{\'{i}}nseca das redes.
+
+\noindent\textbf{3. Amea{\c{c}}a {\`{a}} Validade Externa e Contamina{\c{c}}{\~a}o Pr{\'{e}}via:}
+Uma salvaguarda metodol{\'{o}}gica cr{\'{i}}tica diz respeito {\`{a}} validade externa dos resultados. Como o corpus p{\'{u}}blico do ARC-AGI-1 foi disponibilizado em 2019, {\'{e}} plaus{\'{i}}vel que modelos de fronteira tenham sido expostos ao conjunto de treino e a reposit{\'{o}}rios comunit{\'{a}}rios durante o pr{\'{e}}-treinamento. Embora o protocolo de CEGIS avalie a capacidade de induzir c{\'{o}}digo sob contraexemplos em tempo de execu{\c{c}}{\~a}o, n{\~a}o se pode descartar que a alta acur{\'{a}}cia inicial reflita memoriza{\c{c}}{\~a}o pr{\'{e}}via de primitivas visuais.
+
+\section{\Limitacoes{} e Trabalhos Futuros}
+\label{sec:limitacoes}
+As descobertas reportadas delineiam quatro \direcoes{} \prioritarias{}:
+(i)~\textbf{Escala de Amostragem:} estender o estudo \as{} 800 tarefas completas do ARC-AGI-1 e ao ARC-AGI-2;
+(ii)~\textbf{\Imposicao{}:} substituir diretivas puramente textuais por filtros \estaticos{} \rigidos{} via AST que barrem \ramificacoes{} ad-hoc antes do sandbox;
+(iii)~\textbf{Busca em \Arvore{}:} transcender a busca linear \basica{} mediante \textit{Monte Carlo Tree Search} (MCTS) ou amostragem \textit{Best-of-$N$} com escalonamento \termico{} ($\Delta T > 0$); e
+(iv)~\textbf{DSLs \Geometricas{}:} atenuar o teto de \representacao{} suprindo primitivas de simetria e conectividade \morfologica{} em vez de Python puro.
+
+\section{\Conclusao{}}
+\label{sec:conclusao}
+Este trabalho estabeleceu uma investiga{\c{c}}{\~a}o estat{\'{i}}stica acerca da s{\'{i}}ntese indutiva de programas guiada por contraexemplos no ARC-AGI-1, confrontando o protocolo cl{\'{a}}ssico de auto-reparo conversacional com diretivas textuais restritivas anti-hardcoding. A evid{\^{e}}ncia emp{\'{i}}rica coletada sobre oito modelos de linguagem refutou a hip{\'{o}}tese de que as diretivas de prompt negativas utilizadas promovam maior generaliza{\c{c}}{\~a}o para grades ocultas, demonstrando equival{\^{e}}ncia estat{\'{i}}stica entre as abordagens.
+
+A an{\'{a}}lise dos programas sintetizados revelou que essa paridade decorre do vi{\'{e}}s algor{\'{i}}tmico intr{\'{i}}nseco dos grandes modelos de linguagem, que raramente recorrem a ramifica{\c{c}}{\~o}es ad-hoc por coordenadas no baseline ($0{,}29\%$), tornando a restri{\c{c}}{\~a}o textual pontual ineficaz frente ao verdadeiro mecanismo de sobreajuste esp{\'{u}}rio: a infla{\c{c}}{\~a}o estrutural de c{\'{o}}digo por ac{\'{u}}mulo de remendos.
+
+Por fim, a taxonomia de erros evidenciou que a quase totalidade das falhas origina-se da n{\~a}o converg{\^{e}}ncia sobre as demonstra{\c{c}}{\~o}es de treino, e n{\~a}o de sobreajustes esp{\'{u}}rios. Esse achado demonstra que a fronteira de avan{\c{c}}o no ARC-AGI n{\~a}o depende primariamente de ajustes sutis de prompt ou penaliza{\c{c}}{\~o}es de heur{\'{i}}sticas, mas da amplia{\c{c}}{\~a}o do or{\c{c}}amento computacional em tempo de infer{\^{e}}ncia via busca estruturada em {\'{a}}rvore e do suporte a linguagens espec{\'{i}}ficas de dom{\'{i}}nio.
+
 \bibliography{references}
 
 \end{document}
